@@ -6,6 +6,7 @@ IPTV M3U 去重脚本
 - 画质优先级：4K > 极清 > 超清 > 高清 > 标清 > 未知
 - 保持原作者顺序，不重新排序
 - 可纠正分组（CCTV 统一归央视热播）
+- 在大湾区卫视后面插入「香港卫视」
 """
 
 import re
@@ -26,6 +27,16 @@ QUALITY_RANK = {
 
 # 去掉画质后缀，得到频道“基名”
 QUALITY_SUFFIX = re.compile(r"\s*(4K|极清|超清|高清|标清)\s*$", re.IGNORECASE)
+
+# ===== 要插入的固定频道 =====
+INSERT_AFTER = "大湾区卫视"   # 插在这个频道后面
+INSERT_EXTINF = (
+    '#EXTINF:-1 tvg-name="香港卫视" '
+    'tvg-logo="" '
+    'group-title="全国热播",香港卫视'
+)
+INSERT_URL = "http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226321/index.m3u8?servicetype=1"
+# ============================
 
 
 def get_quality(name: str) -> int:
@@ -84,6 +95,23 @@ def fix_group(extinf: str) -> str:
     return extinf
 
 
+def insert_channel(entries):
+    """在大湾区卫视后面插入「香港卫视」"""
+    new_entries = []
+    inserted = False
+    for extinf, url in entries:
+        new_entries.append((extinf, url))
+        tvg_name = extract_tvg_name(extinf)
+        base = get_base_name(tvg_name)
+        if not inserted and base == INSERT_AFTER:
+            new_entries.append((INSERT_EXTINF, INSERT_URL))
+            inserted = True
+    if not inserted:
+        print(f"警告: 未找到「{INSERT_AFTER}」，香港卫视已追加到末尾")
+        new_entries.append((INSERT_EXTINF, INSERT_URL))
+    return new_entries
+
+
 def main():
     print(f"下载源: {SOURCE_URL}")
     req = urllib.request.Request(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"})
@@ -95,6 +123,10 @@ def main():
 
     # 纠正分组
     entries = [(fix_group(e), u) for e, u in entries]
+
+    # 插入香港卫视
+    entries = insert_channel(entries)
+    print(f"插入后条目数: {len(entries)}")
 
     # 按频道基名去重，保留画质最高的，同时记录首次出现顺序
     best = {}
