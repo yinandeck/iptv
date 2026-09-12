@@ -4,6 +4,7 @@
 IPTV M3U 去重脚本
 - 按频道名分组，只保留画质最高的一条
 - 画质优先级：4K > 极清 > 超清 > 高清 > 标清 > 未知
+- 保持原作者顺序，不重新排序
 """
 
 import re
@@ -74,18 +75,6 @@ def extract_tvg_name(extinf: str) -> str:
     return m.group(1).strip() if m else ""
 
 
-def natural_key(name: str):
-    """把名字里的数字按数值排序，例如 CCTV-2 排在 CCTV-10 前面"""
-    parts = re.split(r'(\d+)', name)
-    key = []
-    for p in parts:
-        if p.isdigit():
-            key.append((0, int(p)))      # 数字按数值比
-        else:
-            key.append((1, p.lower()))   # 文字按字母比
-    return key
-
-
 def main():
     print(f"下载源: {SOURCE_URL}")
     req = urllib.request.Request(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"})
@@ -95,14 +84,18 @@ def main():
     entries = parse_m3u(raw)
     print(f"原始条目数: {len(entries)}")
 
-    # 按频道基名分组，保留画质最高的
+    # 按频道基名去重，保留画质最高的，同时记录首次出现顺序
     best = {}
+    order = []          # 记录频道基名首次出现的顺序
     for extinf, url in entries:
         tvg_name = extract_tvg_name(extinf)
         base = get_base_name(tvg_name)
         quality = get_quality(tvg_name)
 
-        if base not in best or quality > best[base][0]:
+        if base not in best:
+            order.append(base)
+            best[base] = (quality, extinf, url, tvg_name)
+        elif quality > best[base][0]:
             best[base] = (quality, extinf, url, tvg_name)
 
     print(f"去重后条目数: {len(best)}")
@@ -110,11 +103,11 @@ def main():
     # 北京时间
     bj_time = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S CST+0800")
 
-    # 写输出
+    # 写输出：按原始顺序
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
         f.write(f'# update time: {bj_time}\n')
-        for base in sorted(best.keys(), key=natural_key):
+        for base in order:
             _, extinf, url, _ = best[base]
             f.write(extinf + "\n")
             f.write(url + "\n\n")
