@@ -7,8 +7,8 @@ IPTV M3U 去重脚本
 """
 
 import re
-import sys
 import urllib.request
+from datetime import datetime, timezone, timedelta
 
 SOURCE_URL = "https://raw.githubusercontent.com/Healer-sys/Home/refs/heads/main/iptv/gx.m3u"
 OUTPUT_FILE = "clean.m3u"
@@ -74,23 +74,23 @@ def extract_tvg_name(extinf: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def natural_key(name: str):
+    """把名字里的数字按数值排序，例如 CCTV-2 排在 CCTV-10 前面"""
+    parts = re.split(r'(\d+)', name)
+    key = []
+    for p in parts:
+        if p.isdigit():
+            key.append((0, int(p)))      # 数字按数值比
+        else:
+            key.append((1, p.lower()))   # 文字按字母比
+    return key
+
+
 def main():
     print(f"下载源: {SOURCE_URL}")
     req = urllib.request.Request(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         raw = resp.read().decode("utf-8", errors="ignore")
-
-    # 提取头部（#EXTM3U 和 x-tvg-url）
-    header_lines = []
-    for line in raw.splitlines():
-        if line.startswith("#EXTM3U"):
-            header_lines.append(line)
-        elif line.startswith("#") and "update time" in line:
-            continue
-        elif line.startswith("#EXTINF"):
-            break
-        elif line.startswith("#"):
-            header_lines.append(line)
 
     entries = parse_m3u(raw)
     print(f"原始条目数: {len(entries)}")
@@ -107,10 +107,14 @@ def main():
 
     print(f"去重后条目数: {len(best)}")
 
+    # 北京时间
+    bj_time = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S CST+0800")
+
     # 写输出
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write("#EXTM3U x-tvg-url=\"https://epg.112114.xyz/pp.xml\"\n")
-        for base in sorted(best.keys()):
+        f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
+        f.write(f'# update time: {bj_time}\n')
+        for base in sorted(best.keys(), key=natural_key):
             _, extinf, url, _ = best[base]
             f.write(extinf + "\n")
             f.write(url + "\n\n")
