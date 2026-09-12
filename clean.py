@@ -5,6 +5,7 @@ IPTV M3U 去重脚本
 - 按频道名分组，只保留画质最高的一条
 - 画质优先级：4K > 极清 > 超清 > 高清 > 标清 > 未知
 - 保持原作者顺序，不重新排序
+- 可纠正分组（CCTV 统一归央视热播）
 """
 
 import re
@@ -28,7 +29,6 @@ QUALITY_SUFFIX = re.compile(r"\s*(4K|极清|超清|高清|标清)\s*$", re.IGNOR
 
 
 def get_quality(name: str) -> int:
-    """从频道名中提取画质等级"""
     m = QUALITY_SUFFIX.search(name)
     if m:
         key = m.group(1).lower()
@@ -37,12 +37,10 @@ def get_quality(name: str) -> int:
 
 
 def get_base_name(name: str) -> str:
-    """去掉画质后缀，得到频道基名，用于分组"""
     return QUALITY_SUFFIX.sub("", name).strip()
 
 
 def parse_m3u(text: str):
-    """解析 m3u，返回 [(extinf行, url行), ...]"""
     lines = [l.rstrip("\n") for l in text.splitlines()]
     entries = []
     i = 0
@@ -66,13 +64,24 @@ def parse_m3u(text: str):
 
 
 def extract_tvg_name(extinf: str) -> str:
-    """从 #EXTINF 行中提取 tvg-name"""
     m = re.search(r'tvg-name="([^"]*)"', extinf)
     if m:
         return m.group(1)
-    # 没有 tvg-name 就用逗号后面的显示名
     m = re.search(r",(.+)$", extinf)
     return m.group(1).strip() if m else ""
+
+
+def fix_group(extinf: str) -> str:
+    """根据频道名纠正 group-title"""
+    tvg_name = extract_tvg_name(extinf)
+    # 所有 CCTV- 开头的，强制归到 央视热播
+    if re.match(r"^CCTV", tvg_name):
+        extinf = re.sub(
+            r'group-title="[^"]*"',
+            'group-title="央视热播"',
+            extinf
+        )
+    return extinf
 
 
 def main():
@@ -84,9 +93,12 @@ def main():
     entries = parse_m3u(raw)
     print(f"原始条目数: {len(entries)}")
 
+    # 纠正分组
+    entries = [(fix_group(e), u) for e, u in entries]
+
     # 按频道基名去重，保留画质最高的，同时记录首次出现顺序
     best = {}
-    order = []          # 记录频道基名首次出现的顺序
+    order = []
     for extinf, url in entries:
         tvg_name = extract_tvg_name(extinf)
         base = get_base_name(tvg_name)
