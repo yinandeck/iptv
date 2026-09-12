@@ -1,6 +1,34 @@
 #EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"
+# update time: 2026-09-12 10:34:08 CST+0800
+#EXTINF:-1 tvg-name="CCTV5+ 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv05plus/GXC5plusTB0731.png" group-title="央视热播",CCTV5+
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225998/index.m3u8?servicetype=1
+
 #EXTINF:-1 tvg-name="CCTV-1 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/cctv-1/GXC1TB0731.png" group-title="央视热播",CCTV-1
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225934/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-2 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv2/GXC2TB0731.png" group-title="央视热播",CCTV-2
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225948/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-3 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv3/GXC3TB0731.png" group-title="央视热播",CCTV-3
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225916/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-4 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv4/GXC4TB0731.png" group-title="央视热播",CCTV-4
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225922/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-5 极清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-12000k-1080P-cctv5/GXC5TB073103.png" group-title="央视热播",CCTV-5
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225801/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-6 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv6/GXC6TB0731.png" group-title="央视热播",CCTV-6
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225936/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-7 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv7/GXC7TB0731.png" group-title="央视热播",CCTV-7
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225892/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-8 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv8/GXC8TB0731.png" group-title="央视热播",CCTV-8
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226001/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="CCTV-9 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv9/GXC9TB0731.png" group-title="央视热播",CCTV-9
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225939/index.m3u8?servicetype=1
 
 #EXTINF:-1 tvg-name="CCTV-10 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv10/GXC10TB0731.png" group-title="央视热播",CCTV-10
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226004/index.m3u8?servicetype=1
@@ -29,33 +57,6 @@ http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226690/index.m3u8?service
 #EXTINF:-1 tvg-name="CCTV-17 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv17/GXC17TB0731.png" group-title="央视热播",CCTV-17
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225910/index.m3u8?servicetype=1
 
-#EXTINF:-1 tvg-name="CCTV-2 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv2/GXC2TB0731.png" group-title="央视热播",CCTV-2
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225948/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-3 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv3/GXC3TB0731.png" group-title="央视热播",CCTV-3
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225916/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-4 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv4/GXC4TB0731.png" group-title="央视热播",CCTV-4
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225922/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-5 极清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-12000k-1080P-cctv5/GXC5TB073103.png" group-title="央视热播",CCTV-5
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225801/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-6 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv6/GXC6TB0731.png" group-title="央视热播",CCTV-6
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225936/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-7 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv7/GXC7TB0731.png" group-title="央视热播",CCTV-7
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225892/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-8 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv8/GXC8TB0731.png" group-title="央视热播",CCTV-8
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226001/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV-9 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv9/GXC9TB0731.png" group-title="央视热播",CCTV-9
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225939/index.m3u8?servicetype=1
-
-#EXTINF:-1 tvg-name="CCTV5+ 超清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/HD-8000k-1080P-cctv05plus/GXC5plusTB0731.png" group-title="央视热播",CCTV5+
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225998/index.m3u8?servicetype=1
-
 #EXTINF:-1 tvg-name="三沙卫视(标清) 高清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/GXGD-sanshastv/GX1207SSWSTB.png" group-title="本地及特色",三沙卫视(标清)
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226405/index.m3u8?servicetype=1
 
@@ -83,14 +84,14 @@ http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225875/index.m3u8?service
 #EXTINF:-1 tvg-name="中国国际电视台阿拉伯语频道 标清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/SD-4000k-576P-CGTNArab/GXZGGJALBTB0731.png" group-title="央视热播",中国国际电视台阿拉伯语频道
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225822/index.m3u8?servicetype=1
 
-#EXTINF:-1 tvg-name="中国教育-1 高清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/jiaoyutv/ZGJY1YXTBY0415.png" group-title="本地及特色",中国教育-1
-http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225776/index.m3u8?servicetype=1
-
 #EXTINF:-1 tvg-name="中国教育2套标清4M 标清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/SD-4000k-576P-jiaoyutv2/ZGJY2YXTBY0415.png" group-title="本地及特色",中国教育2套标清4M
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225881/index.m3u8?servicetype=1
 
 #EXTINF:-1 tvg-name="中国教育4套 高清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/SD-4000k-576P-jiaoyutv4/ZGJY4YXTBY0415.png" group-title="本地及特色",中国教育4套
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225723/index.m3u8?servicetype=1
+
+#EXTINF:-1 tvg-name="中国教育-1 高清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/jiaoyutv/ZGJY1YXTBY0415.png" group-title="本地及特色",中国教育-1
+http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225776/index.m3u8?servicetype=1
 
 #EXTINF:-1 tvg-name="云南卫视 高清" tvg-logo="http://images.center.bcs.ottcn.com:8080/images/ysten/images/ysten/TV/yntv1/GX0801YNWSTB.png" group-title="全国热播",云南卫视
 http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225794/index.m3u8?servicetype=1
