@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-IPTV M3U 去重脚本（回看模式）
+IPTV M3U 去重脚本
 - 按频道名分组，只保留画质最高的一条
 - 画质优先级：4K > 极清 > 超清 > 高清 > 标清 > 未知
 - 保持原作者顺序，不重新排序
 - 可纠正分组（CCTV 统一归央视热播）
 - 在大湾区卫视后面插入「香港卫视」
-- 输出为回看模式（反代 IP + servicetype=3）
 """
 
 import re
@@ -16,9 +15,6 @@ from datetime import datetime, timezone, timedelta
 
 SOURCE_URL = "https://raw.githubusercontent.com/Healer-sys/Home/refs/heads/main/iptv/gx.m3u"
 OUTPUT_FILE = "clean.m3u"
-
-# 回看反代 IP
-REPLAY_IP = "39.137.139.50"
 
 QUALITY_RANK = {
     "4k": 100,
@@ -106,16 +102,6 @@ def insert_channel(entries):
     return new_entries
 
 
-def to_replay_url(url: str) -> str:
-    """转成回看地址：加反代 IP + servicetype=3"""
-    if url.startswith("http://"):
-        url = "http://" + REPLAY_IP + "/" + url[len("http://"):]
-    elif url.startswith("https://"):
-        url = "http://" + REPLAY_IP + "/" + url[len("https://"):]
-    url = url.replace("servicetype=1", "servicetype=3")
-    return url
-
-
 def main():
     print(f"下载源: {SOURCE_URL}")
     req = urllib.request.Request(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"})
@@ -146,15 +132,14 @@ def main():
 
     bj_time = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S CST+0800")
 
-    # 写输出：回看模式
+    # 写输出：直播模式
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
         f.write(f'# update time: {bj_time}\n')
         for base in order:
             _, extinf, url, _ = best[base]
-            replay_url = to_replay_url(url)
             f.write(extinf + "\n")
-            f.write(replay_url + "\n\n")
+            f.write(url + "\n\n")
 
     print(f"已生成: {OUTPUT_FILE}")
 
