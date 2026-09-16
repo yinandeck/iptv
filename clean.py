@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-IPTV M3U 去重脚本
+IPTV M3U 去重脚本（回看模式）
 - 按频道名分组，只保留画质最高的一条
 - 画质优先级：4K > 极清 > 超清 > 高清 > 标清 > 未知
 - 保持原作者顺序，不重新排序
 - 可纠正分组（CCTV 统一归央视热播）
 - 在大湾区卫视后面插入「香港卫视」
-- 额外生成一份回看版 clean-replay.m3u
+- 输出为回看模式（反代 IP + servicetype=3）
 """
 
 import re
@@ -16,12 +16,10 @@ from datetime import datetime, timezone, timedelta
 
 SOURCE_URL = "https://raw.githubusercontent.com/Healer-sys/Home/refs/heads/main/iptv/gx.m3u"
 OUTPUT_FILE = "clean.m3u"
-OUTPUT_REPLAY_FILE = "clean-replay.m3u"
 
 # 回看反代 IP
 REPLAY_IP = "39.137.139.50"
 
-# 画质优先级，数字越大越优先
 QUALITY_RANK = {
     "4k": 100,
     "极清": 90,
@@ -30,7 +28,6 @@ QUALITY_RANK = {
     "标清": 60,
 }
 
-# 去掉画质后缀，得到频道“基名”
 QUALITY_SUFFIX = re.compile(r"\s*(4K|极清|超清|高清|标清)\s*$", re.IGNORECASE)
 
 # ===== 要插入的固定频道 =====
@@ -47,8 +44,7 @@ INSERT_URL = "http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221226321/inde
 def get_quality(name: str) -> int:
     m = QUALITY_SUFFIX.search(name)
     if m:
-        key = m.group(1).lower()
-        return QUALITY_RANK.get(key, 0)
+        return QUALITY_RANK.get(m.group(1).lower(), 0)
     return 0
 
 
@@ -111,10 +107,7 @@ def insert_channel(entries):
 
 
 def to_replay_url(url: str) -> str:
-    """把直播地址转成回看地址：
-    - 前面加反代 IP
-    - servicetype=1 改成 servicetype=3
-    """
+    """转成回看地址：加反代 IP + servicetype=3"""
     if url.startswith("http://"):
         url = "http://" + REPLAY_IP + "/" + url[len("http://"):]
     elif url.startswith("https://"):
@@ -153,27 +146,17 @@ def main():
 
     bj_time = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S CST+0800")
 
-    # 写直播版
+    # 写输出：回看模式
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
         f.write(f'# update time: {bj_time}\n')
         for base in order:
             _, extinf, url, _ = best[base]
-            f.write(extinf + "\n")
-            f.write(url + "\n\n")
-    print(f"已生成: {OUTPUT_FILE}")
-
-    # 写回看版
-    with open(OUTPUT_REPLAY_FILE, "w", encoding="utf-8") as f:
-        f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
-        f.write(f'# update time: {bj_time}\n')
-        f.write('# 回看模式：servicetype=3 + 反代 IP\n')
-        for base in order:
-            _, extinf, url, _ = best[base]
             replay_url = to_replay_url(url)
             f.write(extinf + "\n")
             f.write(replay_url + "\n\n")
-    print(f"已生成: {OUTPUT_REPLAY_FILE}")
+
+    print(f"已生成: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
