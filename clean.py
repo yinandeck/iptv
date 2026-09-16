@@ -7,6 +7,7 @@ IPTV M3U 去重脚本
 - 保持原作者顺序，不重新排序
 - 可纠正分组（CCTV 统一归央视热播）
 - 在大湾区卫视后面插入「香港卫视」
+- 额外生成一份回看版 clean-replay.m3u
 """
 
 import re
@@ -15,6 +16,10 @@ from datetime import datetime, timezone, timedelta
 
 SOURCE_URL = "https://raw.githubusercontent.com/Healer-sys/Home/refs/heads/main/iptv/gx.m3u"
 OUTPUT_FILE = "clean.m3u"
+OUTPUT_REPLAY_FILE = "clean-replay.m3u"
+
+# 回看反代 IP
+REPLAY_IP = "39.137.139.50"
 
 # 画质优先级，数字越大越优先
 QUALITY_RANK = {
@@ -29,7 +34,7 @@ QUALITY_RANK = {
 QUALITY_SUFFIX = re.compile(r"\s*(4K|极清|超清|高清|标清)\s*$", re.IGNORECASE)
 
 # ===== 要插入的固定频道 =====
-INSERT_AFTER = "大湾区卫视"   # 插在这个频道后面
+INSERT_AFTER = "大湾区卫视"
 INSERT_EXTINF = (
     '#EXTINF:-1 tvg-name="香港卫视" '
     'tvg-logo="" '
@@ -83,20 +88,13 @@ def extract_tvg_name(extinf: str) -> str:
 
 
 def fix_group(extinf: str) -> str:
-    """根据频道名纠正 group-title"""
     tvg_name = extract_tvg_name(extinf)
-    # 所有 CCTV- 开头的，强制归到 央视热播
     if re.match(r"^CCTV", tvg_name):
-        extinf = re.sub(
-            r'group-title="[^"]*"',
-            'group-title="央视热播"',
-            extinf
-        )
+        extinf = re.sub(r'group-title="[^"]*"', 'group-title="央视热播"', extinf)
     return extinf
 
 
 def insert_channel(entries):
-    """在大湾区卫视后面插入「香港卫视」"""
     new_entries = []
     inserted = False
     for extinf, url in entries:
@@ -112,6 +110,19 @@ def insert_channel(entries):
     return new_entries
 
 
+def to_replay_url(url: str) -> str:
+    """把直播地址转成回看地址：
+    - 前面加反代 IP
+    - servicetype=1 改成 servicetype=3
+    """
+    if url.startswith("http://"):
+        url = "http://" + REPLAY_IP + "/" + url[len("http://"):]
+    elif url.startswith("https://"):
+        url = "http://" + REPLAY_IP + "/" + url[len("https://"):]
+    url = url.replace("servicetype=1", "servicetype=3")
+    return url
+
+
 def main():
     print(f"下载源: {SOURCE_URL}")
     req = urllib.request.Request(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"})
@@ -121,14 +132,10 @@ def main():
     entries = parse_m3u(raw)
     print(f"原始条目数: {len(entries)}")
 
-    # 纠正分组
     entries = [(fix_group(e), u) for e, u in entries]
-
-    # 插入香港卫视
     entries = insert_channel(entries)
     print(f"插入后条目数: {len(entries)}")
 
-    # 按频道基名去重，保留画质最高的，同时记录首次出现顺序
     best = {}
     order = []
     for extinf, url in entries:
@@ -144,10 +151,9 @@ def main():
 
     print(f"去重后条目数: {len(best)}")
 
-    # 北京时间
     bj_time = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S CST+0800")
 
-    # 写输出：按原始顺序
+    # 写直播版
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
         f.write(f'# update time: {bj_time}\n')
@@ -155,8 +161,19 @@ def main():
             _, extinf, url, _ = best[base]
             f.write(extinf + "\n")
             f.write(url + "\n\n")
-
     print(f"已生成: {OUTPUT_FILE}")
+
+    # 写回看版
+    with open(OUTPUT_REPLAY_FILE, "w", encoding="utf-8") as f:
+        f.write('#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml"\n')
+        f.write(f'# update time: {bj_time}\n')
+        f.write('# 回看模式：servicetype=3 + 反代 IP\n')
+        for base in order:
+            _, extinf, url, _ = best[base]
+            replay_url = to_replay_url(url)
+            f.write(extinf + "\n")
+            f.write(replay_url + "\n\n")
+    print(f"已生成: {OUTPUT_REPLAY_FILE}")
 
 
 if __name__ == "__main__":
